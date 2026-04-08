@@ -3,5 +3,5 @@
 
 
 def to_kv(k: str, v: int | float) -> tuple[str, float]:
-	"""Return (key, v squared as float) for a given key and number."""
-	return (k, float(v**2))
+    """Return (key, v squared as float) for a given key and number."""
+    return (k, float(v**2))
