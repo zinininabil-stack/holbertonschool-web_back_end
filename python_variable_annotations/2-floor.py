@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""Module providing a floor function for floats."""
 
 import math
 
-n: float
 
 def floor(n: float) -> int:
-	return floor(n)
+	"""Return the floor of a floating-point number."""
+	return math.floor(n)

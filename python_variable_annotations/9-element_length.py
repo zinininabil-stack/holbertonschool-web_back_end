@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-
-i: int
-lst: list
+"""Module for pairing elements with their lengths."""
 
 
-def element_length(lst: list[str]) -> list[tuple[str,int]]:
+def element_length(lst: list[str]) -> list[tuple[str, int]]:
+    """Return a list of tuples ``(element, length of element)``."""
     return [(i, len(i)) for i in lst]
