@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 k: str
 v: int | float
 

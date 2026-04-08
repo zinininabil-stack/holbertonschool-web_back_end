@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 str1 : str
 str2: str
 
