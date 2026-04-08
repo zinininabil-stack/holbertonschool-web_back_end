@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Module for creating (key, value squared) tuples."""
+from typing import Union, Tuple
+
 
 k: str
 v: int | float
