@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
+"""
+Pagination helper module.
+
+This module contains a helper function for calculating pagination indexes
+and a Server class to paginate a database of popular baby names.
+"""
 
 import csv
 import math
 from typing import List
-
-"""
-Pagination helper module.
-
-This module contains a helper function for calculating pagination indexes.
-"""
 
 
 def index_range(page: int, page_size: int) -> tuple:
