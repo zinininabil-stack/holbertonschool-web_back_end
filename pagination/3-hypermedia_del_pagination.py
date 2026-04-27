@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""Deletion-resilient hypermedia pagination.
-
-This module provides deletion-resilient pagination that ensures users don't
-miss items from the dataset even when rows are removed between queries.
+"""
+Deletion-resilient hypermedia pagination
 """
 
 import csv
@@ -35,6 +33,8 @@ class Server:
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
+            # The truncated_dataset line from the skeleton is a red herring
+            # We index the entire dataset as per the method's goal.
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
@@ -55,41 +55,31 @@ class Server:
         Returns
         -------
         Dict[str, Any]
-            Dictionary containing:
-            - index: current start index of the returned page
-            - next_index: next index to query with
-            - page_size: current page size
-            - data: the actual page of the dataset
+            A dictionary containing pagination details.
         """
         if index is None:
             index = 0
 
         indexed_data = self.indexed_dataset()
+        max_index = max(indexed_data.keys())
 
-        assert isinstance(index, int) and index >= 0, \
-            "index must be a non-negative integer"
+        assert isinstance(index, int) and 0 <= index <= max_index, \
+            "index must be a non-negative integer within the dataset range"
         assert isinstance(page_size, int) and page_size > 0, \
             "page_size must be a positive integer"
-        assert index <= max(indexed_data.keys()), \
-            "index out of range"
 
         data = []
-        current_index = index
+        current_pos = index
+        next_index = -1
 
-        # Collect page_size items starting from index, skipping deleted rows
-        while len(data) < page_size and current_index in indexed_data:
-            data.append(indexed_data[current_index])
-            current_index += 1
+        while len(data) < page_size and current_pos <= max_index:
+            # Check if the item exists at this index
+            if current_pos in indexed_data:
+                data.append(indexed_data[current_pos])
+            current_pos += 1
 
-        # Find the next valid index after the current page
-        next_index = current_index
-        while next_index not in indexed_data and \
-                next_index <= max(indexed_data.keys()):
-            next_index += 1
-
-        # If we've gone past the end, set next_index to None
-        if next_index > max(indexed_data.keys()):
-            next_index = None
+        # The next_index is the position right after the last item we checked
+        next_index = current_pos
 
         return {
             'index': index,
