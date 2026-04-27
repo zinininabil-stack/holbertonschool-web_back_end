@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Pagination helper module.
+"""Simple pagination module.
 
-This module contains a helper function for calculating pagination indexes
-and a Server class to paginate a database of popular baby names.
+This module provides a helper function and a Server class used to paginate
+the popular baby names dataset.
 """
 
 import csv
