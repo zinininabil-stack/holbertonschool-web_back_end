@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Pagination helper module.
+
+This module contains a helper function for calculating pagination indexes.
+"""
+
 
 def index_range(page: int, page_size: int) -> tuple:
     """
