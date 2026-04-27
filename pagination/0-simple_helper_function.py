@@ -15,8 +15,7 @@ def index_range(page: int, page_size: int) -> tuple:
     Returns
     -------
     tuple
-        (start_index, end_index) usable for slicing a list: lst[start_index:end_index]
-
+    
     Examples
     --------
     >>> index_range(1, 10)
