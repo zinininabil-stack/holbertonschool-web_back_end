@@ -15,7 +15,7 @@ def index_range(page: int, page_size: int) -> tuple:
     Returns
     -------
     tuple
-    
+
     Examples
     --------
     >>> index_range(1, 10)
