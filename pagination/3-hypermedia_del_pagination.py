@@ -5,7 +5,7 @@ Deletion-resilient hypermedia pagination
 
 import csv
 import math
-from typing import List, Dict, Any
+from typing import List, Dict
 
 
 class Server:
@@ -25,7 +25,6 @@ class Server:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
             self.__dataset = dataset[1:]
-
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
@@ -33,57 +32,28 @@ class Server:
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
-            # The truncated_dataset line from the skeleton is a red herring
-            # We index the entire dataset as per the method's goal.
+            truncated_dataset = dataset[:1000]
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None,
-                        page_size: int = 10) -> Dict[str, Any]:
-        """
-        Get a page of the dataset with deletion-resilient pagination.
-
-        Parameters
-        ----------
-        index : int, optional
-            Starting index for the page. Default is None (treated as 0).
-        page_size : int, optional
-            Number of items per page. Default is 10.
-
-        Returns
-        -------
-        Dict[str, Any]
-            A dictionary containing pagination details.
-        """
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """Return deletion-resilient page with hypermedia metadata."""
         if index is None:
             index = 0
-
-        indexed_data = self.indexed_dataset()
-        max_index = max(indexed_data.keys())
-
-        assert isinstance(index, int) and 0 <= index <= max_index, \
-            "index must be a non-negative integer within the dataset range"
-        assert isinstance(page_size, int) and page_size > 0, \
-            "page_size must be a positive integer"
-
+        dataset = self.indexed_dataset()
+        assert 0 <= index <= max(dataset.keys())
         data = []
-        current_pos = index
-        next_index = -1
-
-        while len(data) < page_size and current_pos <= max_index:
-            # Check if the item exists at this index
-            if current_pos in indexed_data:
-                data.append(indexed_data[current_pos])
-            current_pos += 1
-
-        # The next_index is the position right after the last item we checked
-        next_index = current_pos
+        current_index = index
+        while len(data) < page_size and current_index <= max(dataset.keys()):
+            if current_index in dataset:
+                data.append(dataset[current_index])
+            current_index += 1
 
         return {
-            'index': index,
-            'next_index': next_index,
-            'page_size': len(data),
-            'data': data,
+            "index": index,
+            "next_index": current_index,
+            "page_size": page_size,
+            "data": data
         }
