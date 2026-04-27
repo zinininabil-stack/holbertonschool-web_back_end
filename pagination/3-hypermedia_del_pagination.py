@@ -35,9 +35,8 @@ class Server:
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
-            truncated_dataset = dataset[:1000]
             self.__indexed_dataset = {
-                i: dataset[i] for i in range(len(truncated_dataset))
+                i: dataset[i] for i in range(len(dataset))
             }
         return self.__indexed_dataset
 
@@ -62,33 +61,35 @@ class Server:
             - page_size: current page size
             - data: the actual page of the dataset
         """
-        assert index is not None and isinstance(index, int) and index >= 0, \
+        if index is None:
+            index = 0
+
+        indexed_data = self.indexed_dataset()
+
+        assert isinstance(index, int) and index >= 0, \
             "index must be a non-negative integer"
         assert isinstance(page_size, int) and page_size > 0, \
             "page_size must be a positive integer"
-
-        indexed_data = self.indexed_dataset()
         assert index <= max(indexed_data.keys()), \
             "index out of range"
 
         data = []
         current_index = index
-        next_index = index
 
+        # Collect page_size items starting from index, skipping deleted rows
         while len(data) < page_size and current_index in indexed_data:
             data.append(indexed_data[current_index])
             current_index += 1
 
         # Find the next valid index after the current page
-        while current_index not in indexed_data and \
-                current_index <= max(indexed_data.keys()):
-            current_index += 1
+        next_index = current_index
+        while next_index not in indexed_data and \
+                next_index <= max(indexed_data.keys()):
+            next_index += 1
 
         # If we've gone past the end, set next_index to None
-        if current_index > max(indexed_data.keys()):
+        if next_index > max(indexed_data.keys()):
             next_index = None
-        else:
-            next_index = current_index
 
         return {
             'index': index,
