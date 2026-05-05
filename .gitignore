@@ -30,6 +30,39 @@ pnpm-debug.log*
 # VS Code
 .vscode/
 
+# JetBrains IDEs
+.idea/
+
+# macOS / Linux temp
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# ESLint cache
+.eslintcache
+
+# Jest / test coverage
+.nyc_output/
+coverage/
+
+# Build caches
+.parcel-cache/
+dist/
+build/
+
+# Misc
+.cache/
+
+
 # --- Project-specific ---
 # Holberton-style local test runners (kept out of commits)
 *-main.py
